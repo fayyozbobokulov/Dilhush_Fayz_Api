@@ -6,6 +6,8 @@ const drinksSchema = new Schema(
 		liter: { type: Number, required: true },
 		img: { type: String, required: true },
 		price: { type: Number, required: true },
+		selection: { type: Boolean, default: true },
+		objId: { type: String },
 	},
 	{ timestamps: true }
 );

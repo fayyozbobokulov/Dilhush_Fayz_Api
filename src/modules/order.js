@@ -1,26 +1,15 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const orderSchema = new Schema({
-	foods: [
-		{
-			food: {
-				type: Object,
-				required: true,
-			},
-			count: {
-				type: Number,
-				required: true,
-			},
-		},
-	],
-	user: {
-		fullName: { type: String },
+const orderSchema = new Schema(
+	{
+		foods: [Object],
 		userId: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',
-			required: true,
+			require: true,
 		},
 	},
-});
+	{ timestamps: true }
+);
 
 export default model('Order', orderSchema);

@@ -37,7 +37,7 @@ export const Login = async (req, res) => {
 
 		const accessToken = jwt.sign(
 			{
-				id: user._id,
+				_id: user._id,
 				password: user.password,
 			},
 			process.env.JWT_SEC,
@@ -64,3 +64,29 @@ export const Login = async (req, res) => {
 // 		res.status(500).json(err);
 // 	}
 // };
+
+// Put Method
+export const updateUser = async (req, res) => {
+	try {
+		const newUser = await User.findByIdAndUpdate(
+			{ _id: req.params.id },
+			{
+				$set: {
+					...req.body,
+				},
+			},
+			{ new: true, useFindAndModify: false }
+		);
+		!newUser &&
+			res.status(500).json({
+				message: 'Is not a User',
+				data: false,
+			});
+		res.status(200).json({ message: 'Successfully updated', data: newUser });
+	} catch (error) {
+		res.status(500).json({
+			message: error.message,
+			data: false,
+		});
+	}
+};

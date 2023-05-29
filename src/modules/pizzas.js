@@ -6,6 +6,8 @@ const pizzasSchema = new Schema(
 		amount: { type: String, required: true },
 		img: { type: String, required: true },
 		price: { type: Number, required: true },
+		selection: { type: Boolean, default: true },
+		objId: { type: String },
 	},
 	{ timestamps: true }
 );
