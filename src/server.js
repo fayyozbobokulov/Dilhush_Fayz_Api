@@ -8,6 +8,9 @@ connectDB();
 const app = express();
 app.use(cors());
 
+//Middleware
+import fileMiddleware from './middleware/file.js';
+
 //Routes
 import drinkRouter from './routers/drinks.js';
 import milliyRoute from './routers/milliyFoods.js';
@@ -18,6 +21,7 @@ import authRouter from './routers/auth.js';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileMiddleware.single('img'));
 
 app.use('/api/drink', drinkRouter);
 app.use('/api/milliyFood', milliyRoute);
