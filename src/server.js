@@ -19,6 +19,7 @@ import pizzaRouter from './routers/pizzas.js';
 import saladRouter from './routers/salads.js';
 import authRouter from './routers/auth.js';
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileMiddleware.single('img'));
