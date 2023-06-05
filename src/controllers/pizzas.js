@@ -6,7 +6,7 @@ export const getPizza = async (req, res) => {
 		const pizza = await Pizza.find();
 		!pizza && res.status(500).json({ message: 'not found', data: false });
 		res.status(200).json({
-			message: 'successfully get are Pizza',
+			message: 'successfully get is Pizza',
 			data: pizza,
 		});
 	} catch (error) {
@@ -49,6 +49,7 @@ export const updatePizza = async (req, res) => {
 			{ _id: req.params.id },
 			{
 				$set: {
+					img: req.file.filename,
 					...req.body,
 				},
 			},

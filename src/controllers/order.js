@@ -1,6 +1,4 @@
-import { Schema, Types } from 'mongoose';
 import Order from '../modules/order.js';
-import { ObjectId } from 'mongodb';
 
 export const getOrder = async (req, res) => {
 	try {
@@ -22,20 +20,26 @@ export const addOrder = async (req, res) => {
 		const order = await Order.findOne({ userId: req.user._id });
 		if (!order) {
 			const ord = new Order({
-				foods: [req.body],
+				foods: [{ img: req.file.filename, ...req.body }],
 				userId: req.user._id.toString(),
+				amount: req.body.amount,
 			});
 			await ord.save();
 			res.status(200).json({ message: 'successfully Created', data: ord });
 		}
 		const newOrder = await Order.findByIdAndUpdate(
 			{ _id: order._id },
-			{ $push: { foods: req.body } },
+			{
+				$push: {
+					foods: { img: req.file.filename, ...req.body },
+					amount: req.body.amount,
+				},
+			},
 			{ new: true }
 		);
 		!newOrder &&
 			res.status(500).json({
-				message: 'Is not a group',
+				message: 'Order not found',
 				data: false,
 			});
 		res.status(200).json({ message: 'Successfully updated', data: newOrder });
@@ -46,20 +50,3 @@ export const addOrder = async (req, res) => {
 		});
 	}
 };
-
-// const newFood = await Order.findByIdAndUpdate(
-// 	{ _id: order._id },
-// 	{
-// 		$set: {
-// 			foods: newOrder,
-// 		},
-// 	},
-// 	{ new: true, useFindAndModify: false }
-// );
-
-// !newFood &&
-// 	res.status(500).json({
-// 		message: 'Is not a order',
-// 		data: false,
-// 	});
-// res.status(200).json({ message: 'Successfully Add to Order', data: newFood });

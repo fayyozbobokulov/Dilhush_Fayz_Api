@@ -33,7 +33,7 @@ export const getByIdSalad = async (req, res) => {
 // Post Method
 export const postSalad = async (req, res) => {
 	try {
-		const salad = new Salad(req.body);
+		const salad = new Salad({ img: req.file.filename, ...req.body });
 		await salad.save();
 		res.status(200).json({ message: 'successfully updatedAt', data: salad });
 	} catch (error) {
@@ -51,6 +51,7 @@ export const updateSalad = async (req, res) => {
 			{ _id: req.params.id },
 			{
 				$set: {
+					img: req.file.filename,
 					...req.body,
 				},
 			},

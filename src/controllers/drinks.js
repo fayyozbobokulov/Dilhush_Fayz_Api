@@ -32,7 +32,7 @@ export const getByIdDrink = async (req, res) => {
 // Post Method
 export const postDrink = async (req, res) => {
 	try {
-		const drink = new Drinks(req.body);
+		const drink = new Drinks({ img: req.file.filename, ...req.body });
 		await drink.save();
 		res.status(200).json({ message: 'successfully updatedAt', data: drink });
 	} catch (error) {
@@ -50,6 +50,7 @@ export const updateDrink = async (req, res) => {
 			{ _id: req.params.id },
 			{
 				$set: {
+					img: req.file.filename,
 					...req.body,
 				},
 			},

@@ -32,7 +32,7 @@ export const getByIdNationalFood = async (req, res) => {
 // Post Method
 export const postNotionalFood = async (req, res) => {
 	try {
-		const food = new NotionalFoods(req.body);
+		const food = new NotionalFoods({ img: req.file.filename, ...req.body });
 		await food.save();
 		res.status(200).json({ message: 'successfully updatedAt', data: food });
 	} catch (error) {
@@ -50,6 +50,7 @@ export const updateNationalFood = async (req, res) => {
 			{ _id: req.params.id },
 			{
 				$set: {
+					img: req.file.filename,
 					...req.body,
 				},
 			},
