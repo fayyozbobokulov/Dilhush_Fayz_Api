@@ -9,9 +9,9 @@ const orderSchema = new Schema(
 			require: true,
 		},
 		amount: { type: Number, required: true },
-		orderNumber: { type: Number, default: 1 },
-		createdAt: { type: BigInt },
-		state: { type: Number },
+		orderId: { type: String, default: "soskcsc"},
+		createdAt: { type: Date },
+		state: { type: Number, default: 0},
 	},
 	{ timestamps: true }
 );

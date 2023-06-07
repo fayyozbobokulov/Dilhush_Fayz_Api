@@ -1,4 +1,5 @@
 import Order from '../modules/order.js';
+import { v4 } from 'uuid';
 
 export const getOrder = async (req, res) => {
 	try {
@@ -22,7 +23,8 @@ export const addOrder = async (req, res) => {
 			const ord = new Order({
 				foods: [{ img: req.file.filename, ...req.body }],
 				userId: req.user._id.toString(),
-				amount: req.body.amount,
+				amount: req.body.price,
+				orderId: v4(),
 			});
 			await ord.save();
 			res.status(200).json({ message: 'successfully Created', data: ord });
@@ -32,8 +34,8 @@ export const addOrder = async (req, res) => {
 			{
 				$push: {
 					foods: { img: req.file.filename, ...req.body },
-					amount: req.body.amount,
 				},
+				$inc: { amount: req.body.price },
 			},
 			{ new: true }
 		);
