@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const paymentSchema = new Schema({
 	cartNumber: { type: String, limit: 16, required: true },
