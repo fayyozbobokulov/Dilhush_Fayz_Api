@@ -18,12 +18,14 @@ import orderRouter from './routers/order.js';
 import pizzaRouter from './routers/pizzas.js';
 import saladRouter from './routers/salads.js';
 import authRouter from './routers/auth.js';
+import paymentRouter from './routers/payment.js';
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileMiddleware.single('img'));
 
+app.use('/api/payment', paymentRouter);
 app.use('/api/drink', drinkRouter);
 app.use('/api/milliyFood', milliyRoute);
 app.use('/api/pizza', pizzaRouter);
