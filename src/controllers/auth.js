@@ -9,11 +9,11 @@ export const Register = async (req, res) => {
 		if (!currentUser) {
 			const user = new User(req.body);
 			const newuser = await user.save();
-			res
+			return res
 				.status(200)
 				.json({ message: 'User addet Sucsessfuly', data: newuser });
 		} else {
-			res.json({
+			return res.json({
 				message: 'This email is olready exist',
 			});
 		}
@@ -30,11 +30,13 @@ export const Login = async (req, res) => {
 			email: req.body.email,
 		});
 
-		!user &&
-			res.status(401).json({ data: false, message: 'Wrong email or password' });
+		if (!user)
+			return res
+				.status(401)
+				.json({ data: false, message: 'Wrong email or password' });
 
-		user.password !== req.body.password &&
-			res.status(401).json('Wrong Password');
+		if (user.password !== req.body.password)
+			return res.status(401).json('Wrong Password');
 
 		const accessToken = jwt.sign(
 			{
@@ -79,17 +81,16 @@ export const updateUser = async (req, res) => {
 			},
 			{ new: true, useFindAndModify: false }
 		);
-		!newUser &&
-			res.status(500).json({
+		if (!newUser)
+			return res.status(500).json({
 				message: 'Is not a User',
 				data: false,
 			});
 		res.status(200).json({ message: 'Successfully updated', data: newUser });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
-		return;
 	}
 };
