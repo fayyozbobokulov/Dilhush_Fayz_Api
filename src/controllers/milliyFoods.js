@@ -11,7 +11,8 @@ export const getNationalFood = async (req, res) => {
 			data: nationalFood,
 		});
 	} catch (error) {
-		console.log(error.message);
+		res.status(500).json(error.message);
+		return;
 	}
 };
 
@@ -26,6 +27,7 @@ export const getByIdNationalFood = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -40,6 +42,7 @@ export const postNotionalFood = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -67,6 +70,7 @@ export const updateNationalFood = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -80,5 +84,6 @@ export const deletedNationalFood = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };

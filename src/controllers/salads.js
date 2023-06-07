@@ -10,7 +10,7 @@ export const getSalad = async (req, res) => {
 			data: salad,
 		});
 	} catch (error) {
-		console.log(error.message);
+		return res.json(error.message);
 	}
 };
 
@@ -23,7 +23,7 @@ export const getByIdSalad = async (req, res) => {
 			.status(200)
 			.json({ message: 'successfully get are salad', data: salad });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
@@ -37,7 +37,7 @@ export const postSalad = async (req, res) => {
 		await salad.save();
 		res.status(200).json({ message: 'successfully updatedAt', data: salad });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
@@ -64,7 +64,7 @@ export const updateSalad = async (req, res) => {
 			});
 		res.status(200).json({ message: 'Successfully updated', data: newSalad });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
@@ -77,7 +77,7 @@ export const deletedSalad = async (req, res) => {
 		await Salad.findByIdAndDelete(req.params.id);
 		res.status(200).json({ message: 'successfully deleted', data: true });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});

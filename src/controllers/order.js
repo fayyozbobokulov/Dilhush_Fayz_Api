@@ -13,6 +13,7 @@ export const getOrder = async (req, res) => {
 			message: 'Order is impty',
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -50,5 +51,6 @@ export const addOrder = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };

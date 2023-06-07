@@ -20,6 +20,7 @@ export const Register = async (req, res) => {
 	} catch (error) {
 		res.status(401).json({ error: error.message });
 		console.log(error);
+		return;
 	}
 };
 
@@ -45,7 +46,8 @@ export const Login = async (req, res) => {
 		);
 		res.status(200).json({ accessToken });
 	} catch (err) {
-		res.status(500).json(err);
+		res.status(500).json(err.message);
+		return;
 	}
 };
 
@@ -88,5 +90,6 @@ export const updateUser = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };

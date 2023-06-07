@@ -9,7 +9,8 @@ export const getDrinks = async (req, res) => {
 			.status(200)
 			.json({ message: 'successfully get are drinks', data: drinks });
 	} catch (error) {
-		console.log(error.message);
+		res.status(500).json(error.message);
+		return;
 	}
 };
 
@@ -26,6 +27,7 @@ export const getByIdDrink = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -40,6 +42,7 @@ export const postDrink = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -67,6 +70,7 @@ export const updateDrink = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -80,6 +84,7 @@ export const deletedDrink = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };
 
@@ -92,5 +97,6 @@ export const filterDrink = async (req, res) => {
 			message: error.message,
 			data: false,
 		});
+		return;
 	}
 };

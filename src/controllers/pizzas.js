@@ -10,7 +10,7 @@ export const getPizza = async (req, res) => {
 			data: pizza,
 		});
 	} catch (error) {
-		console.log(error.message);
+		return res.json(error.message);
 	}
 };
 
@@ -21,7 +21,7 @@ export const getByIdPizza = async (req, res) => {
 		!food && res.status(500).json({ message: 'not found', data: false });
 		res.status(200).json({ message: 'successfully get are food', data: food });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
@@ -35,7 +35,7 @@ export const postPizza = async (req, res) => {
 		await food.save();
 		res.status(200).json({ message: 'successfully updatedAt', data: food });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
@@ -62,7 +62,7 @@ export const updatePizza = async (req, res) => {
 			});
 		res.status(200).json({ message: 'Successfully updated', data: newPizza });
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message,
 			data: false,
 		});
