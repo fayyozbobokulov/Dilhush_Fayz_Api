@@ -1,5 +1,6 @@
 import User from '../modules/users.js';
 import jwt from 'jsonwebtoken';
+import { v4 } from 'uuid';
 
 export const Register = async (req, res) => {
 	try {
@@ -7,7 +8,7 @@ export const Register = async (req, res) => {
 			email: req.body.email,
 		});
 		if (!currentUser) {
-			const user = new User(req.body);
+			const user = new User({ userId: v4(), ...req.body });
 			const newuser = await user.save();
 			return res
 				.status(200)

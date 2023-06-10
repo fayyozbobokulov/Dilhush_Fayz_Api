@@ -6,11 +6,11 @@ import { PaymeError, TransactionState } from '../enums/transaction.enums.js';
 const checkPerformTransaction = async params => {
 	const { account, amount } = params;
 
-	const user = await User.findById(account.user_id);
+	const user = await User.findOne({ userId: account.user_id });
 	if (!user) {
 		return PaymeError.UserNotFound;
 	}
-	const product = await Order.findById(account.order_id);
+	const product = await Order.findOne({ orderId: account.order_id });
 	if (!product) {
 		return PaymeError.ProductNotFound;
 	}
