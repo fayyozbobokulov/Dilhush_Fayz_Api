@@ -3,7 +3,7 @@ import Order from '../modules/order.js';
 import Transaction from '../modules/transaction.js';
 import { PaymeError, TransactionState } from '../enums/transaction.enums.js';
 
-const checkPerformTransaction = async params => {
+const checkPerformTransaction = async (params) => {
 	const { account, amount } = params;
 
 	const user = await User.findOne({ userId: account.user_id });
@@ -18,6 +18,8 @@ const checkPerformTransaction = async params => {
 	if (amount !== product.amount) {
 		return PaymeError.InvalidAmount;
 	}
+
+	return { allow: true };
 };
 
 const checkTransaction = async params => {
