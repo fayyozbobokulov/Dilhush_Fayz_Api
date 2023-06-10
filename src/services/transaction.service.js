@@ -4,28 +4,24 @@ import Transaction from '../modules/transaction.js';
 import { PaymeError, TransactionState } from '../enums/transaction.enums.js';
 
 const checkPerformTransaction = async params => {
-	const {
-		account: { user_id: userId, product_id: productId },
-		amount,
-	} = params;
+	const { account, amount } = params;
 
-	const user = await User.findById(userId);
+	const user = await User.findById(account.user_id);
 	if (!user) {
 		return PaymeError.UserNotFound;
 	}
-
-	const product = await Order.findById(productId);
+	const product = await Order.findById(account.order_id);
 	if (!product) {
 		return PaymeError.ProductNotFound;
 	}
 
-	if (amount !== product.price) {
+	if (amount !== product.amount) {
 		return PaymeError.InvalidAmount;
 	}
 };
 
 const checkTransaction = async params => {
-	const transaction = await Transaction.findById(params.id);
+	const transaction = await Transaction.findOne({ id: params.id });
 	if (!transaction) {
 		return PaymeError.TransactionNotFound;
 	}
@@ -41,15 +37,14 @@ const checkTransaction = async params => {
 };
 
 const createTransaction = async params => {
-	const {
-		account: { user_id: userId, product_id: productId },
-		time,
-		amount,
-	} = params;
+	const { account, time, amount } = params;
 
-	await checkPerformTransaction(params);
+	const data = await checkPerformTransaction(params);
+	if (data) {
+		return data;
+	}
 
-	let transaction = await Transaction.findById(params.id);
+	let transaction = await Transaction.findOne({ id: params.id });
 	if (transaction) {
 		if (transaction.state !== TransactionState.Pending) {
 			return PaymeError.CantDoOperation;
@@ -61,7 +56,7 @@ const createTransaction = async params => {
 
 		if (!expirationTime) {
 			await Transaction.findByIdAndUpdate(
-				{ _id: params.id },
+				{ _id: transaction._id },
 				{
 					$set: {
 						state: TransactionState.PendingCanceled,
@@ -81,8 +76,8 @@ const createTransaction = async params => {
 	}
 
 	transaction = await Transaction.findOne({
-		user_id: userId,
-		product_id: productId,
+		user_id: account.user_id,
+		product_id: account.order_d,
 	});
 
 	if (transaction) {
@@ -92,12 +87,12 @@ const createTransaction = async params => {
 			return PaymeError.Pending;
 	}
 
-	const newTransaction = await new Transaction({
+	const newTransaction = new Transaction({
 		id: params.id,
 		state: TransactionState.Pending,
 		amount,
-		user_id: userId,
-		product_id: productId,
+		user_id: account.user_id,
+		product_id: account.order_id,
 		create_time: time,
 	});
 	await newTransaction.save();
@@ -108,10 +103,10 @@ const createTransaction = async params => {
 	};
 };
 
-const performTransaction = async (params, id) => {
+const performTransaction = async params => {
 	const currentTime = Date.now();
 
-	const transaction = await Transaction.findById(params.id);
+	const transaction = await Transaction.findOne({ id: params.id });
 	if (!transaction) {
 		return PaymeError.TransactionNotFound;
 	}
@@ -127,12 +122,13 @@ const performTransaction = async (params, id) => {
 			state: TransactionState.Paid,
 		};
 	}
-
+	console.log((currentTime - transaction.create_time) / 60000);
 	const expirationTime = (currentTime - transaction.create_time) / 60000 < 12; // 12m
 
 	if (!expirationTime) {
+		console.log('timed out transaction');
 		await Transaction.findByIdAndUpdate(
-			{ id: params.id },
+			{ _id: transaction._id },
 			{
 				$set: {
 					state: TransactionState.PendingCanceled,
@@ -147,7 +143,7 @@ const performTransaction = async (params, id) => {
 	}
 
 	await Transaction.findByIdAndUpdate(
-		{ id: params.id },
+		{ _id: transaction._id },
 		{
 			$set: { state: TransactionState.Paid, perform_time: currentTime },
 		},
@@ -162,25 +158,29 @@ const performTransaction = async (params, id) => {
 };
 
 const cancelTransaction = async params => {
-	const transaction = await Transaction.findById(params.id);
+	const transaction = await Transaction.findOne({ id: params.id });
 	if (!transaction) {
 		return PaymeError.TransactionNotFound;
 	}
 
 	const currentTime = Date.now();
 
-	if (transaction.state > 0) {
+	if (transaction.state === 1) {
 		await Transaction.findByIdAndUpdate(
-			{ id: params.id },
+			{ _id: transaction._id },
 			{
 				$set: {
-					tate: -Math.abs(transaction.state),
+					state: -Math.abs(transaction.state),
 					reason: params.reason,
 					cancel_time: currentTime,
 				},
 			},
 			{ new: true, useFindAndModify: false }
 		);
+	}
+
+	if (transaction.state === 2) {
+		return PaymeError.TransactionNotCancel;
 	}
 
 	return {

@@ -53,6 +53,15 @@ export const PaymeError = {
 			en: 'Transaction not found',
 		},
 	},
+	TransactionNotCancel: {
+		name: 'TransactionNotCancelled',
+		code: -31007,
+		message: {
+			uz: 'Tranzaktsiyani bekor qilolmaymiz',
+			ru: 'Невозможно отменить транзакцию',
+			en: 'Unable to cancel transaction',
+		},
+	},
 	AlreadyDone: {
 		name: 'AlreadyDone',
 		code: -31060,

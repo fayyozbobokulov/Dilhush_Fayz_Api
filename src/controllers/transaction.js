@@ -6,27 +6,29 @@ export const payme = async (req, res, next) => {
 
 		switch (method) {
 			case 'CheckPerformTransaction': {
-				await service.checkPerformTransaction(params);
-
-				return res.json({ result: { allow: true } });
+				const data = await service.checkPerformTransaction(params);
+				if (!data) {
+					return res.json({ result: { allow: true } });
+				}
+				return res.json(data);
 			}
 			case 'CheckTransaction': {
-				const result = await this.service.checkTransaction(params);
+				const result = await service.checkTransaction(params);
 
 				return res.json({ result: result });
 			}
 			case 'CreateTransaction': {
-				const result = await this.service.createTransaction(params);
+				const result = await service.createTransaction(params);
 
 				return res.json({ result: result });
 			}
 			case 'PerformTransaction': {
-				const result = await this.service.performTransaction(params);
+				const result = await service.performTransaction(params);
 
 				return res.json({ result: result });
 			}
 			case 'CancelTransaction': {
-				const result = await this.service.cancelTransaction(params);
+				const result = await service.cancelTransaction(params);
 
 				return res.json({ result: result });
 			}
