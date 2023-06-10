@@ -15,7 +15,7 @@ export const payme = async (req, res, next) => {
 			case 'CheckTransaction': {
 				const result = await service.checkTransaction(params);
 
-				return res.json({ result: result });
+				return res.json({ jsonrpc: '2.0', result: result });
 			}
 			case 'CreateTransaction': {
 				const result = await service.createTransaction(params);
